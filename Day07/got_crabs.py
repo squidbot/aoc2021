@@ -1,7 +1,6 @@
-from os import system
-
-
 import sys
+import statistics
+
 def crabs():
     with open('input.txt') as f:
         lines = f.read().splitlines()
@@ -45,5 +44,18 @@ def crabs2():
                 lowestCostPosition = potential_pos
         print("Lowest cost", lowestCost, "at position", lowestCostPosition)
 
+def crabs3():
+    with open('input.txt') as f:
+        lines = f.read().splitlines()
+        #load the called line and remove the line to make board parsing easier
+        start_positions = [int(i) for i in lines[0].split(',')]
+        median = int(statistics.median(start_positions))
+        print("Median =", median)
+        cost = 0
+        for pos in start_positions:
+            cost += abs(pos - median)
+        print("Cost = ", cost)
+
+
 if __name__ == '__main__':
-    crabs2()
+    crabs3()
