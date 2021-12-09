@@ -47,7 +47,7 @@ def smoke2(heightmap):
                     counts.append(count)
     counts.sort()
     print(counts)
-    print("Product =", counts[len(counts) - 1] * counts[len(counts) - 2] * counts[len(counts) - 3])
+    print("Product =", counts[-1] * counts[-2] * counts[-3])
 
 if __name__ == '__main__':
     with open('input.txt') as f:
