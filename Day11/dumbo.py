@@ -30,7 +30,6 @@ def dumbo1(playfield):
             if ten_count == 0:
                 break
         
-
         # clear all the >9 to 0
         print("Step ", step)
         for row in range(num_rows):
@@ -40,7 +39,6 @@ def dumbo1(playfield):
                 print(playfield[row][col], end='')
             print("")
         
-
     print("Number of flashes =", flash_count)
 
 def dumbo2(playfield):
@@ -72,8 +70,7 @@ def dumbo2(playfield):
                                 if playfield[scan_row][scan_col] == 10:
                                     ten_count += 1
             if ten_count == 0:
-                break
-        
+                break    
 
         # clear all the >9 to 0
         print("Step ", step)
@@ -96,7 +93,6 @@ def dumbo2(playfield):
 
     print("Steps to simultaneous =", step)
     
-
 if __name__ == '__main__':
     with open('input.txt') as f:
         lines = f.read().splitlines()
@@ -106,7 +102,6 @@ if __name__ == '__main__':
         
         dumbo2(playfield)
  
-
 '''
 - First, the energy level of each octopus increases by 1.
 - Then, any octopus with an energy level greater than 9 flashes.
