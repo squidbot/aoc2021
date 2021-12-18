@@ -1,4 +1,5 @@
 import math
+from os import set_inheritable
 
 ex1 = [
     '[[[[4,3],4],4],[7,[[8,4],9]]]',
@@ -55,6 +56,11 @@ ex6 = [
     '[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]'
 ]
 
+ex7 = [
+    '[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]',
+    '[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]'
+]
+
 def explode(num, pos):
     lnum = num[pos]
     rnum = num[pos + 1]
@@ -77,30 +83,45 @@ def split(num, pos):
     return num[:pos] + ['[', lnum, rnum, ']'] + num[pos+1:]
 
 def reduce(num):
+    #print("reducing", convert_to_string(num))
     pos = 0
     left_brace_count = 0
-    while pos < len(num):
+    for pos in range(len(num)):
         if num[pos] == '[':
             left_brace_count += 1
             if left_brace_count == 5:
+                #print("Explode at position", pos + 1)
                 num = explode(num, pos + 1)
                 num = reduce(num)
                 break
         elif num[pos] == ']':
             left_brace_count -= 1
-        else:
-            if num[pos] > 9:
-                num = split(num, pos)
-                num = reduce(num)
-                break
-        pos += 1
+    for pos in range(len(num)):
+        if isinstance(num[pos], int) and num[pos] > 9:
+            #print("Split at position", pos)
+            num = split(num, pos)
+            num = reduce(num)
+            break
+
     return num
 
 def add(num1, num2):
     return ['['] + num1 + num2 + [']']
 
-def magnitude(line):
-    return 0
+def magnitude(num):
+    stack = []
+    mag = 0
+    for entry in num:
+        if entry == ']':
+            r = stack.pop()
+            l = stack.pop()
+            mag = 3 * l + 2 * r
+            stack.append(mag)
+        elif entry == '[':
+            pass
+        else:
+            stack.append(entry)
+    return mag
 
 # it will be much easier to deal with a list of numbers and braces
 def convert_from_string(line):
@@ -128,21 +149,36 @@ def convert_to_string(num):
             line += '['
     return line
 
-def snaifish1(nums):
+def snailfish1(nums):
     sum = nums[0]
     for num in nums[1:]:
+        print("summing", convert_to_string(sum), "and", convert_to_string(num))
         sum = add(sum, num)
+        print("sum=", convert_to_string(sum))
         sum = reduce(sum)
-
-    print(convert_to_string(sum))
+        print("reduced=", convert_to_string(sum))
     
     print("Magnitude=", magnitude(sum))
+
+def snailfish2(nums):
+    mag = 0
+    for i in range(len(nums)):
+        for j in range(len(nums)):
+            if i != j:
+                sum = add(nums[i], nums[j])
+                sum = reduce(sum)
+                m = magnitude(sum)
+                if m > mag:
+                    mag = m
+    print(mag)
+
 
 if __name__ == '__main__':
     with open('input.txt') as f:
         final_input = [convert_from_string(x) for x in f.read().splitlines()]
+        #snailfish1(final_input)
+        snailfish2(final_input)
+
         
-        snaifish1([convert_from_string(x) for x in ex3])
-        #print(convert_to_string(explode(convert_from_string("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]"), 18)))
-        #print(convert_to_string(split(['[', '[', '[', '[',0,7, ']',4, ']','[', 15, '[', 0,13, ']', ']', ']','[', 1,1, ']',']'], 10)))
+
 
